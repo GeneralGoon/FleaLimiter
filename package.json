@@ -1,6 +1,6 @@
 {
     "name": "FleaLimiter",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "sptVersion": "~3.9",
     "loadBefore": [],
     "loadAfter": [],
@@ -24,7 +24,7 @@
         "typescript": "5.4",
         "winston": "3.12"
     },
-    "author": "Chomp",
+    "author": "GeneralGoon",
     "contributors": [],
     "license": "MIT"
 }
