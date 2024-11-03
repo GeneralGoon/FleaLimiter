@@ -1,0 +1,12 @@
+{
+	"barter" : false,
+	"gear" : false,
+	"mods" : false,
+	"weapon" : false,
+	"ammo" : false,
+	"provisions" : false,
+	"medication" : false,
+	"keys" : false,
+	"info" : false,
+	"special" : false
+}
