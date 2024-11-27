@@ -3,6 +3,8 @@ import { DependencyContainer } from "tsyringe";
 import { IPostDBLoadMod } from "@spt/models/external/IPostDBLoadMod";
 import { DatabaseServer } from "@spt/servers/DatabaseServer";
 import { IDatabaseTables } from "@spt/models/spt/server/IDatabaseTables";
+import { ItemHelper } from "@spt/helpers/ItemHelper";
+import { BaseClasses } from "@spt/models/enums/BaseClasses";
 
 class Mod implements IPostDBLoadMod
 {
@@ -10,38 +12,93 @@ class Mod implements IPostDBLoadMod
 
     public postDBLoad(container: DependencyContainer): void
     {
+        const itemHelper: ItemHelper = container.resolve<ItemHelper>("ItemHelper");
         const databaseServer = container.resolve<DatabaseServer>("DatabaseServer");
         const tables: IDatabaseTables = databaseServer.getTables();
         const items = Object.values(tables.templates.items);
-        const categories = tables.templates.handbook.Categories;
+        
+        const config = {
+            barter: {
+                enabled: this.modConfig.barter,
+                baseClass: BaseClasses.BARTER_ITEM
+            },
+            gear: {
+                enabled: this.modConfig.gear,
+                baseClass: BaseClasses.EQUIPMENT
+            },
+            container: {
+                enabled: this.modConfig.gear,
+                baseClass: BaseClasses.LOCKABLE_CONTAINER
+            },
+            container2: {
+                enabled: this.modConfig.gear,
+                baseClass: BaseClasses.SIMPLE_CONTAINER
+            },
+            vest: {
+                enabled: this.modConfig.gear,
+                baseClass: BaseClasses.VEST
+            },
+            backpack: {
+                enabled: this.modConfig.gear,
+                baseClass: BaseClasses.BACKPACK
+            },
+            mods: {
+                enabled: this.modConfig.mods,
+                baseClass: BaseClasses.MOD
+            },
+            weapon: {
+                enabled: this.modConfig.weapon,
+                baseClass: BaseClasses.WEAPON
+            },
+            melee: {
+                enabled: this.modConfig.weapon,
+                baseClass: BaseClasses.KNIFE
+            },
+            throwables: {
+                enabled: this.modConfig.weapon,
+                baseClass: BaseClasses.THROW_WEAPON
+            },
+            ammo: {
+                enabled: this.modConfig.ammo,
+                baseClass: BaseClasses.AMMO
+            },
+            ammopacks: {
+                enabled: this.modConfig.ammo,
+                baseClass: BaseClasses.AMMO_BOX
+            },
+            provisions: {
+                enabled: this.modConfig.provisions,
+                baseClass: BaseClasses.FOOD_DRINK
+            },
+            medication: {
+                enabled: this.modConfig.medication,
+                baseClass: BaseClasses.MEDS
+            },
+            keys: {
+                enabled: this.modConfig.keys,
+                baseClass: BaseClasses.KEY
+            },
+            info: {
+                enabled: this.modConfig.info,
+                baseClass: BaseClasses.INFO
+            },
+            map: {
+                enabled: this.modConfig.info,
+                baseClass: BaseClasses.MAP
+            },
+            special: {
+                enabled: this.modConfig.special,
+                baseClass: BaseClasses.SPEC_ITEM
+            },
+        };
 
-        const subCategories = {};
+        const blacklistedClasses = Object.values(config)
+            .filter(x => x.enabled === true)
+            .map(x => x.baseClass);
 
-        Object.assign(subCategories, { barter: categories.filter(x => x.ParentId == "5b47574386f77428ca22b33e")});
-        Object.assign(subCategories, { gear : categories.filter(x => x.ParentId == "5b47574386f77428ca22b33f")});
-        Object.assign(subCategories, { mods : categories.filter(x => x.ParentId == "5b5f71a686f77447ed5636ab")});
-        Object.assign(subCategories, { weapon : categories.filter(x => x.ParentId == "5b5f78dc86f77409407a7f8e")});
-        Object.assign(subCategories, { ammo : categories.filter(x => x.ParentId == "5b47574386f77428ca22b346")});
-        Object.assign(subCategories, { provisions : categories.filter(x => x.ParentId == "5b47574386f77428ca22b340")});
-        Object.assign(subCategories, { medication : categories.filter(x => x.ParentId == "5b47574386f77428ca22b344")});
-        Object.assign(subCategories, { keys : categories.filter(x => x.ParentId == "5b47574386f77428ca22b342")});
-        Object.assign(subCategories, { info : categories.filter(x => x.ParentId == "5b47574386f77428ca22b341")});
-        Object.assign(subCategories, { special : categories.filter(x => x.ParentId == "5b47574386f77428ca22b345")});
-
-
-        function blackListSubCat(subCatId) {
-            const subCatItems = items.filter(x => x._parent == subCatId);
-            for (const subCatItem of subCatItems) {
-                subCatItem._props.CanSellOnRagfair = false;
-            }
-        }
-
-        for (const [key, value] of Object.entries(this.modConfig)) {
-            if (subCategories[key] && value) {
-                console.log(`[FleaLimiter] Blacklisting ${key} from Flea Market.`);
-                for (const subCat of subCategories[key]) {
-                    blackListSubCat(subCat.Id);
-                }
+        for (const item of items) {
+            if (itemHelper.isOfBaseclasses(item._id, blacklistedClasses)) {
+                item._props.CanSellOnRagfair = false;
             }
         }
     }
