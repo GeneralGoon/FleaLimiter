@@ -1,6 +1,6 @@
 {
     "name": "FleaLimiter",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "sptVersion": "~3.10",
     "loadBefore": [],
     "loadAfter": [],

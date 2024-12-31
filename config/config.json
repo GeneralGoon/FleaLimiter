@@ -1,6 +1,7 @@
 {
 	"barter" : true,
 	"gear" : false,
+	"container" : false,
 	"mods" : false,
 	"weapon" : false,
 	"ammo" : false,

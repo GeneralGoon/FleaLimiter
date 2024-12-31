@@ -27,11 +27,11 @@ class Mod implements IPostDBLoadMod
                 baseClass: BaseClasses.EQUIPMENT
             },
             container: {
-                enabled: this.modConfig.gear,
+                enabled: this.modConfig.container,
                 baseClass: BaseClasses.LOCKABLE_CONTAINER
             },
             container2: {
-                enabled: this.modConfig.gear,
+                enabled: this.modConfig.container,
                 baseClass: BaseClasses.SIMPLE_CONTAINER
             },
             vest: {
